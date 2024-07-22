@@ -1,16 +1,19 @@
 #include <WiFi.h>  // Inclui a biblioteca WiFi
 #define gaveta 14  // Pino para controle da gaveta
 
-const char *ssid = "";  // Nome da rede WiFi
-const char *password = "";   // Senha da rede
+const char *ssid = "Sant";  // Nome da rede WiFi
+const char *password = "duda1234";   // Senha da rede
+//const char *ssid = "OsirMax_Patricia";
+//const char *password = "0987612346";
 
 WiFiServer server(80);  // Define a porta que o servidor irá utilizar
 
-void fechadura();  // Função para gerar web server e controlar a fechadura
+void fechadura();  // Função para gerar web server e controlar o piano
 
 void setup() {
   Serial.begin(9600);
   pinMode(gaveta, OUTPUT);  // Configura como saída
+  digitalWrite(gaveta, 0);
 
   WiFi.begin(ssid, password);  // Inicializa WiFi, passando o nome da rede e a senha
 
@@ -30,7 +33,7 @@ void loop() {
     delay(741);
   }
 
-  fechadura();  // Chama a função para controle da fechadura por WiFi
+  fechadura();  // Chama a função para controle do piano por WiFi
 }
 
 void fechadura() {
@@ -51,7 +54,7 @@ void fechadura() {
             client.println();
 
             // código da página
-            client.print("<head><meta charset=\"UTF-8\" name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+            client.print("<head><meta charset=\"UTF-8\" name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" lang=\"pt-BR\">");
             client.print("<title>Controle de Gaveta</title>");
             client.print("<style>body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; font-family: Arial, sans-serif;}");
             client.print(".container { text-align: center;}");
@@ -73,15 +76,16 @@ void fechadura() {
             client.print("</div>");
 
             client.print("<script>");
-
+            client.print("let abriu = 0;");
             client.print("function abrirGaveta(abrir) {");
-            client.print("  fetch('/' + abrir);");
+            client.print("  if (abriu == 0) {abriu = 1; fetch('/' + abrir);}");
             client.print("    const drawer = document.getElementById('drawer');");
             client.print("    drawer.classList.remove('closed');");
             client.print("    drawer.classList.add('open');");
             client.print("    setTimeout(() => {");
             client.print("      drawer.classList.remove('open');");
             client.print("      drawer.classList.add('closed');");
+            client.print("      abriu = 0;");
             client.print("    }, 5000);");
             client.print("}");
 
