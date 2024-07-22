@@ -1,10 +1,8 @@
 #include <WiFi.h>  // Inclui a biblioteca WiFi
 #define gaveta 14  // Pino para controle da gaveta
 
-const char *ssid = "Sant";  // Nome da rede WiFi
-const char *password = "duda1234";   // Senha da rede
-//const char *ssid = "OsirMax_Patricia";
-//const char *password = "0987612346";
+const char *ssid = "";  // Nome da rede WiFi
+const char *password = "";   // Senha da rede
 
 WiFiServer server(80);  // Define a porta que o servidor irá utilizar
 
