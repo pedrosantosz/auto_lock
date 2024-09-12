@@ -6,7 +6,7 @@ const char *password = "";   // Senha da rede
 
 WiFiServer server(80);  // Define a porta que o servidor irá utilizar
 
-void fechadura();  // Função para gerar web server e controlar o piano
+void fechadura();  // Função para gerar web server e controlar a fechadura
 
 void setup() {
   Serial.begin(9600);
@@ -20,18 +20,18 @@ void setup() {
   }
 
   Serial.println("Endereço de IP: ");
-  Serial.println(WiFi.localIP());  // Mostra o endereço IP
+  Serial.println(WiFi.localIP());  // Mostra o endereço IP no monitor serial do arduino
 
   server.begin();  // Inicializa o servidor web
 }
 
 void loop() {
   while (WiFi.status() != WL_CONNECTED) {  // Verifica se está conectado
-    WiFi.begin(ssid, password);  // Tenta se conectar novamente
+    WiFi.begin(ssid, password);  // Tenta se conectar novamente caso ainda não esteja
     delay(741);
   }
 
-  fechadura();  // Chama a função para controle do piano por WiFi
+  fechadura();  // Chama a função para controle da fechadura por WiFi
 }
 
 void fechadura() {
@@ -42,7 +42,7 @@ void fechadura() {
 
     while (client.connected()) {  // Repete enquanto o cliente estiver conectado
       if (client.available()) {  // Existem dados a serem lidos?
-        char c = client.read();  // Salva em c
+        char c = client.read();  // Salva esses dados em c
 
         if (c == '\n') {  // É um caractere de nova linha?
           if (currentLine.length() == 0) {  // A mensagem terminou?
@@ -99,7 +99,7 @@ void fechadura() {
           currentLine += c;  // Adiciona o caractere à mensagem
         }
 
-        // Verifica se o botão foi pressionado e aciona o transistor para abrir a gaveta
+        // Verifica se o botão foi pressionado e chaveia o transistor pela base para chavear o módulo de relé e abrir a gaveta
         if (currentLine.endsWith("GET /abrir")) { 
           digitalWrite(gaveta, 1);  // abre gaveta
           delay(5000);
